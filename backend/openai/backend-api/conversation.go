@@ -54,6 +54,25 @@ func ConversationPATCH(r *ghttp.Request) {
 		})
 		return
 	}
+	is_archived := reqJson.Get("is_archived").String()
+	// 如果有 is_archived 参数，则修改对话归档状态
+	if is_archived != "" {
+		_, err := cool.DBM(model.NewChatgptConversations()).Data(g.Map{
+			"isarchived": gconv.Bool(is_archived),
+		}).Where("convid", conversationId).Update()
+		if err != nil {
+			g.Log().Error(ctx, err)
+			r.Response.Status = 400
+			r.Response.WriteJson(g.Map{
+				"detail": "Internal Server Error",
+			})
+			return
+		}
+		r.Response.WriteJson(g.Map{
+			"succeed": true,
+		})
+		return
+	}
 	title := reqJson.Get("title").String()
 	// 如果title不为空，则修改对话标题
 	chatgptaccountid := r.Header.Get("ChatGPT-Account-ID")
