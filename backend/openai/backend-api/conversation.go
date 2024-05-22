@@ -280,6 +280,12 @@ func Conversation(r *ghttp.Request) {
 		//响应成功才计数
 		if proxyResponse.StatusCode == 200 {
 			utility.GetStatsInstance(carid).RecordCall()
+			// 对话成功清除倒计时
+			if ChatGPTAccountID == "" {
+				cool.CacheManager.Set(ctx, "clears_in:"+carid, 0, 0*time.Second)
+			} else {
+				cool.CacheManager.Set(ctx, "team_clears_in:"+carid, 0, 0*time.Second)
+			}
 			// 如果配置了对话回调url
 			if config.ConversationNotifyUrl != "" {
 				go func() {
