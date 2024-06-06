@@ -11,6 +11,13 @@ var (
     "props": {
       "__N_SSP": true,
       "pageProps": {
+        "session": {
+          "user": {
+          },
+          "expires": "",
+          "accessToken": "",
+          "authProvider": ""
+        },
         "serviceAnnouncement": {},
         "statsig": {
           "payload": {
